@@ -1,6 +1,12 @@
 /********************TAG SELECTORS********************/
 body {
   background-color: #EAF6F6;
+  /*max-width: 800px;*/
+
+  /*text-align: center;*/
+  margin:auto ;
+  width:600px;
+  border:solid 2px #ffffff;
 }
 
 hr {
@@ -15,14 +21,17 @@ hr {
 h1 {
   color: #66BFBF;
   font-size: 40px;
+  margin-left: 20px;
 }
 
 h3 {
   color: #FF66aa;
+  margin-left: 20px;
 }
 
 img {
   width: 200px;
+  margin-left: 20px;
 }
 
 /********************CLASS SELECTORS********************/
