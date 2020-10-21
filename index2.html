@@ -1,0 +1,301 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <title>小游戏</title>
+        <style>
+            h3 {
+                padding-top: 20px;
+                width: 100%;
+                margin-right: 100px;
+            }
+            body {
+                background-color: antiquewhite;
+                color: darkslategray;
+                font-size: larger;
+                text-align: center;
+                padding: 0;
+                margin: 0;
+user-select:none;
+            }
+            button {
+                background-color: bisque;
+                height: 30px;
+                border-radius: 6px;
+                background:linear-gradient(45deg,rgb(255, 237, 163) 0%,#fc0 100%);
+                border-color: darkslategrey;
+                /* outline-color: aqua; */
+                outline: none;
+            }
+            
+            @keyframes scaleDrew {
+            /* 定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称 */
+                0% {
+                transform: scale(1);
+                }
+
+                25% {
+                transform: scale(1.1);
+                }
+
+                50% {
+                transform: scale(1);
+                }
+
+                75% {
+                transform: scale(1.1);
+                }
+            }
+            
+            .bg {
+                border: 1px solid cyan;
+                width: 90%;
+                max-width: 800px;
+                display: inline-block;
+                padding: 10px;
+            }
+            .blue {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 1px solid white;
+                background: none;
+                background-color: rgb(117, 117, 245);
+                margin: 10px;
+                animation: scaleDrew 3s ease-in-out infinite;
+            }
+            .red {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: 1px solid white;
+                background: none;
+                background-color: rgb(253, 58, 139);
+                margin: 10px;
+                animation: scaleDrew 3s ease-in-out infinite;
+            }
+            .flatbtn {
+                border-radius: 25px;
+                width: 100px;
+                height: 40px;
+                font-size: 16px;
+                border: 1px solid grey;
+            }
+            input {
+                margin-top: 10px;
+                min-width: 16px;
+            }
+            div {
+                margin-bottom: 10px;
+            }
+            .tagg {
+                width: 20%;
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>小游戏</h3>
+        <div class="bg">
+            <button class="flatbtn" onclick="restart()">重新开始</button>
+            <div>
+                
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />1</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />2</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />3</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />5</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" checked=true />10</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />20</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />30</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />50</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />100</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />200</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />300</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />500</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />1000</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />2000</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />3000</div>
+                <div class="tagg"><input onclick="radioClick()" name="rd" type="radio" />5000</div>
+            </div>
+            <div id="history">历史记录: </div>
+            <div id="advice">建议: 0</div>
+            <div id="all">总: 0</div>
+
+            <button class="blue" onclick="blueClick()"></button>
+            <button class="red" onclick="redClick()"></button>
+            <div></div>
+            <button class="flatbtn" onclick="redoLast()">撤销</button>
+        </div>
+        
+    </body>
+    <script>
+        var historyLabel = document.getElementById("history");
+        var adviceLabel = document.getElementById("advice");
+        var allLabel = document.getElementById("all");
+
+        var allInd = [
+            [[0,0,0,0,1,0,0,1,1],[0,0,0,0,1,1,0,0,0],[1,1,1,1,0,0,1,0,1],[1,1,1,1,0,1,0,0,0]],
+            [[0,0,0,1,0,0,0,0,1,0],[0,0,0,1,0,1,1,1,0,0],[1,1,0,0,1,0,1,1,1,0],[1,1,0,0,1,1,1,0,1,1]],
+            [[0,0,1,1,0,0,0,1,0],[0,0,1,1,0,1,1,0,0],[1,1,1,1,0,0,0,1,1],[1,1,1,1,0,1,0,0,1]],
+            [[0,0,1,0,1,0,0,1],[0,0,1,0,1,1,0,1],[1,0,0,1,0,0,1,1],[1,0,0,1,0,1,0,1]],
+            [[0,1,0,1,0,0,0,0,0,1],[0,1,0,1,0,1,1,0,0,0],[1,1,0,0,1,0,0,1,0,1],[1,1,0,0,1,1,0,1,1,1]],
+            [[0,0,0,0,1,0,1,1],[0,0,0,0,1,1,0,0],[1,0,1,0,0,0,1,1],[1,0,1,0,0,1,1,1]],
+            [[0,1,0,0,0,0,1,0,0,0],[0,1,0,0,0,1,0,0,1,1],[1,0,1,1,1,0,0,0,1,1],[1,0,1,1,1,1,1,0,0,0]],
+            [[0,0,0,1,1,0,0,0],[0,0,0,1,1,1,0,1],[1,1,0,1,0,1,0,0],[1,1,1,1,0,1,0,0],[1,1,1,1,1,1,0,0]],
+            [[0,0,0,1,1,0,0,0,0,1],[0,0,0,1,1,1,1,0,1,1],[0,0,1,1,1,0,0,1,1,0],[1,0,0,1,0,0,0,0,0,1],[1,0,0,1,0,1,1,0,0,0]],
+            [[0,1,0,0,0,1,1,0,1],[0,1,1,0,1,0,0,1,1],[0,1,1,1,0,1,0,1,1],[1,1,1,1,0,0,0,0,0],[1,1,1,1,0,1,1,1,0]]];
+        var priArr = [1, 3, 7, 15, 31, 78, 128, 255, 511];
+        var openHis = [];
+        var rate = 10;
+        function radioClick() {
+            btns = document.getElementsByName("rd");
+            for (nd of btns) {
+                if (nd.checked) {
+                    rate = Number(nd.parentElement.innerText)
+                }
+            }
+            if (rate < 1) {
+                rate = 10;
+            }
+            console.log(rate);
+        }
+        function blueClick() {
+            openC(0);
+        }
+
+        function redClick() {
+            openC(1);
+        }
+
+        function openC(n) {
+            openHis.push(n);
+            manyOpen();
+        }
+
+        function redoLast() {
+            if (openHis.length > 1) {
+                openHis.pop();
+                manyOpen();
+            } else {
+                restart();
+            }
+            
+        }
+        function manyOpen() {
+            var sum = 0;
+            var end = 0;
+            var my = 0;
+            for (inds of allInd) {
+                var res2 = openCal(inds, openHis);
+                my += res2[1];
+                res = res2[0];
+                end += res2[2];
+                sum += res;
+            }
+            sum *= rate;
+            my *= rate;
+            if (end == allInd.length) {
+                adviceLabel.innerHTML = "建议: 结束";
+            } else {
+                adviceLabel.innerHTML = "建议: " + sum;
+            }
+            allLabel.innerHTML = "总: " + my;
+            historyLabel.innerHTML = "历史记录: "+openHis;
+        }
+
+        function newArr(len, num) {
+            var arr = new Array(len);
+            var i = arr.length;
+            while(i--){
+                arr[i] = num;
+            }
+            return arr
+        }
+
+        function openCal(indsArr, openRes) {
+            var lianCount = indsArr[0].length;
+            var len = indsArr.length;
+            var openLen = openRes.length;
+            var zhongIndex = newArr(len, 0);
+            var curInds = newArr(len, 0);
+            var curZhus = newArr(len, 0);
+            var advice = newArr(openLen+1, 0);
+            advice[0] = 0;
+            var ind = 0;
+            var end = false;
+            for (op of openRes) {
+                if (ind >= lianCount) {
+                    break;
+                }
+                for (var k = 0; k < indsArr.length; k++) {
+                    curInds[k] = indsArr[k][ind];
+                }
+                for (var i=0; i< curInds.length; i++) {
+                    if (zhongIndex[i] == 1) {
+                        continue;
+                    }
+                    if (curInds[i] == op) {
+                        zhongIndex[i] = 1;
+                    } else {
+                        curZhus[i] =  curZhus[i]+1;
+                        if (curZhus[i] >= priArr.length) {
+                            zhongIndex[i] = 1;
+                        }
+                    }
+                }
+                var zcount = 0;
+                for (var m = 0; m < zhongIndex.length; m++) {
+                    if (zhongIndex[m] == 1) {
+                        zcount += 1;
+                    }
+                }
+                if (zcount == len) {
+                    end = true
+                    break;
+                }
+                if (ind + 1 < lianCount) {
+                    var nextInds = newArr(len, 0);
+                    for (var k = 0; k < indsArr.length; k++) {
+                        nextInds[k] = indsArr[k][ind+1];
+                    }
+                    var res = 0;
+                    for (var nextI=0; nextI< nextInds.length; nextI++) {
+                        if (zhongIndex[nextI] != 1) {
+                            if (nextInds[nextI] == 1) {
+                                res += priArr[curZhus[nextI]];
+                            } else {
+                                res -= priArr[curZhus[nextI]];
+                            }
+                        }
+                    }
+                    advice[ind+1] = res;
+                }
+                ind += 1;
+            }
+            var my = 0;
+            for (var i = 0; i < openRes.length; i++) {
+                if (advice[i] > 0) {
+                    if (openRes[i] == 1) {
+                        my += advice[i];
+                    } else {
+                        my -= advice[i];
+                    }
+                } else if (advice[i] < 0)  {
+                    if (openRes[i] == 0) {
+                        my += Math.abs(advice[i]);
+                    } else {
+                        my -=  Math.abs(advice[i]);
+                    }
+                }
+            }
+            return [advice[openRes.length], my, end];
+        }
+
+        function restart() {
+            openHis = [];
+            historyLabel.innerHTML = "历史记录: ";
+            adviceLabel.innerHTML = "建议: 0";
+            allLabel.innerHTML = "总: 0";
+        }
+    </script>
+</html>
